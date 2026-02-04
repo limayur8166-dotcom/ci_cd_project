@@ -37,3 +37,13 @@ jobs:
             docker rm hello-cicd-app || true
             docker run -d --name hello-cicd-app hello-cicd-app
 
+- name: Deploy to EC2
+  uses: appleboy/ssh-action@v0.1.6
+  with:
+    host: ${{ secrets.EC2_HOST }}
+    username: ec2-user
+    key: ${{ secrets.EC2_SSH_KEY }}
+    script: |
+      docker stop hello-cicd-app || true
+      docker rm hello-cicd-app || true
+      docker run -d -p 8080:80 --name hello-cicd-app hello-cicd-app
